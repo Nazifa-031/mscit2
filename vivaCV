@@ -1,0 +1,151 @@
+# Computer Vision Viva Notes (Quick Revision)
+
+## 1. Geometric Transformations
+
+* Changes the position, size, or orientation of an image.
+* Common transformations: Translation, Rotation, Scaling, Shearing.
+* Used in image alignment and preprocessing.
+
+---
+
+## 2. Image Stitching
+
+* Combines multiple overlapping images into one panoramic image.
+* Detects matching features between images.
+* Commonly used in panorama photography.
+
+---
+
+## 3. Camera Calibration
+
+* Determines camera parameters (focal length, lens distortion, etc.).
+* Corrects image distortion.
+* Improves measurement and 3D reconstruction accuracy.
+
+---
+
+## 4. Face Detection
+
+* Detects the presence and location of faces.
+* Does **not** identify the person.
+* Used in cameras and attendance systems.
+
+---
+
+## 5. Object Detection
+
+* Detects and locates objects in an image.
+* Draws bounding boxes around detected objects.
+* Examples: Cars, people, animals.
+
+---
+
+## 6. Pedestrian Detection
+
+* Detects only human pedestrians.
+* Mainly used in autonomous vehicles and surveillance.
+* Helps improve road safety.
+
+---
+
+## 7. Face Recognition
+
+* Identifies or verifies a person's identity.
+* Requires face detection before recognition.
+* Used in biometric authentication.
+
+---
+
+## 8. 3D Model Construction
+
+* Creates a 3D model from multiple 2D images.
+* Uses images taken from different viewpoints.
+* Applied in gaming, AR/VR, and architecture.
+
+---
+
+## 9. Object Detection & Tracking
+
+* Detection finds the object in each frame.
+* Tracking follows the object's movement across video frames.
+* Used in surveillance and sports analysis.
+
+---
+
+## 10. Feature Extraction using RANSAC
+
+* Feature extraction identifies important points (corners, edges, keypoints).
+* RANSAC removes incorrect matches (outliers).
+* Produces more accurate image matching.
+
+---
+
+## 11. Colorization
+
+* Adds color to grayscale images.
+* Can be done manually or using AI.
+* Used in restoring old photographs.
+
+---
+
+## 12. Text Detection & Recognition
+
+* Text Detection locates text in an image.
+* Text Recognition (OCR) converts detected text into editable text.
+* Used for document scanning and number plate recognition.
+
+---
+
+## 13. Image Matting & Compositing
+
+* Image Matting separates the foreground from the background.
+* Compositing combines multiple images into one.
+* Used in movie visual effects and green screen editing.
+
+---
+
+# Important Differences
+
+### Face Detection vs Face Recognition
+
+* Face Detection → Finds a face.
+* Face Recognition → Identifies whose face it is.
+
+### Object Detection vs Object Tracking
+
+* Detection → Finds objects in a frame.
+* Tracking → Follows objects across video frames.
+
+### Text Detection vs Text Recognition
+
+* Detection → Finds text location.
+* Recognition → Reads and converts text.
+
+### Image Stitching vs 3D Reconstruction
+
+* Image Stitching → Creates one panoramic image.
+* 3D Reconstruction → Creates a 3D model.
+
+### Calibration vs Geometric Transformation
+
+* Camera Calibration → Corrects camera distortion.
+* Geometric Transformation → Changes image position, size, or orientation.
+
+---
+
+# Quick One-Liners
+
+* **Geometric Transformation:** Changes image geometry.
+* **Image Stitching:** Combines images into a panorama.
+* **Camera Calibration:** Corrects camera distortion.
+* **Face Detection:** Finds faces.
+* **Face Recognition:** Identifies people.
+* **Object Detection:** Finds and labels objects.
+* **Pedestrian Detection:** Detects humans.
+* **3D Reconstruction:** Builds 3D models from images.
+* **Object Tracking:** Follows moving objects in video.
+* **RANSAC:** Removes incorrect feature matches.
+* **Colorization:** Adds color to grayscale images.
+* **OCR:** Converts image text into editable text.
+* **Image Matting:** Separates foreground from background.
+* **Compositing:** Combines multiple images.
