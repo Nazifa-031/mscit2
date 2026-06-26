@@ -1,0 +1,139 @@
+# Big Data Analytics Viva Notes (Quick Revision)
+
+## 1. Hadoop & HDFS
+
+* Hadoop: Framework to store and process Big Data.
+* HDFS: Distributed file system that stores data in blocks.
+* NameNode: Stores metadata (file names & block locations).
+* DataNode: Stores actual data blocks.
+* Fault tolerance: Achieved through data replication.
+
+---
+
+## 2. MapReduce (Word Count)
+
+* Programming model for parallel data processing.
+* Mapper: Produces key-value pairs.
+* Reducer: Combines values of the same key.
+* Word Count: Counts frequency of each word.
+
+---
+
+## 3. Weather Dataset (MapReduce)
+
+* Used to process large weather records.
+* Mapper emits (Year, Temperature).
+* Reducer calculates max/average/min temperature.
+
+---
+
+## 4. HBase / MongoDB
+
+* HBase: NoSQL database built on Hadoop.
+* MongoDB: Document-based NoSQL database.
+* Stores unstructured/semi-structured data.
+* Python/R is used for CRUD operations and analysis.
+
+---
+
+## 5. Pig
+
+* High-level platform for Hadoop.
+* Uses Pig Latin scripting language.
+* Easier than writing Java MapReduce programs.
+
+---
+
+## 6. Hive
+
+* Data warehouse on Hadoop.
+* Uses HiveQL (SQL-like language).
+* Converts SQL queries into MapReduce jobs.
+
+---
+
+## 7. Jaql
+
+* Query language for JSON data.
+* Mainly used for processing semi-structured data.
+
+---
+
+## 8. Decision Tree
+
+* Supervised learning algorithm.
+* Used for classification.
+* Makes decisions using tree-like branches.
+
+---
+
+## 9. SVM (Support Vector Machine)
+
+* Supervised classification algorithm.
+* Separates classes using a hyperplane.
+* Works well with high-dimensional data.
+
+---
+
+## 10. Logistic Regression
+
+* Used for binary classification.
+* Predicts probability (Yes/No, Pass/Fail).
+* Admission dataset variables: GRE, GPA, Rank.
+
+---
+
+## 11. Multiple Regression
+
+* Predicts a continuous value.
+* Uses multiple independent variables.
+* Example: Predicting salary or marks.
+
+---
+
+## 12. Classification Model
+
+* Supervised learning.
+* Uses labeled data.
+* Common algorithms: Decision Tree, SVM.
+
+---
+
+## 13. Clustering Model
+
+* Unsupervised learning.
+* Groups similar data together.
+* Common algorithm: K-Means.
+* Cluster plots help visualize groups.
+
+---
+
+# Important Differences
+
+### HDFS vs MongoDB
+
+* HDFS → Distributed file storage.
+* MongoDB → NoSQL document database.
+
+### Hive vs Pig
+
+* Hive → SQL-like queries (HiveQL).
+* Pig → Pig Latin scripting.
+
+### Classification vs Clustering
+
+* Classification → Labeled data (Supervised).
+* Clustering → Unlabeled data (Unsupervised).
+
+### Logistic vs Multiple Regression
+
+* Logistic Regression → Predicts categories/classes.
+* Multiple Regression → Predicts continuous values.
+
+---
+
+# Big Data Basics
+
+* Big Data: Extremely large datasets.
+* 5 Vs: Volume, Velocity, Variety, Veracity, Value.
+* NoSQL databases handle flexible, large-scale data.
