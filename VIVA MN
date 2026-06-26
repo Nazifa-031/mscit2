@@ -1,0 +1,151 @@
+# Advanced Networking Viva Notes (Quick Revision)
+
+## 1. IP SLA Tracking & Path Control
+
+* IP SLA monitors network performance (delay, jitter, packet loss).
+* Tracking detects link availability.
+* Automatically switches to a backup path if the primary link fails.
+* Improves network reliability.
+
+---
+
+## 2. AS_PATH Attribute
+
+* BGP attribute that lists Autonomous Systems a route has passed through.
+* Used to prevent routing loops.
+* Shorter AS_PATH is generally preferred.
+
+---
+
+## 3. IBGP & EBGP, Local Preference, MED
+
+* IBGP: Routing within the same Autonomous System.
+* EBGP: Routing between different Autonomous Systems.
+* Local Preference: Chooses the preferred outgoing path (higher is better).
+* MED (Multi-Exit Discriminator): Suggests the preferred incoming path (lower is better).
+
+---
+
+## 4. Secure the Management Plane
+
+* Protects access to network devices.
+* Use SSH instead of Telnet.
+* Configure strong passwords and user authentication.
+* Apply ACLs to restrict management access.
+
+---
+
+## 5. Policy-Based Routing (PBR)
+
+* Routes traffic based on policies instead of only the routing table.
+* Can route based on source IP, destination, or protocol.
+* Used for traffic engineering and load balancing.
+
+---
+
+## 6. IP SLA & Remote SPAN (RSPAN)
+
+* IP SLA measures network performance.
+* RSPAN remotely mirrors network traffic.
+* Used for troubleshooting and network monitoring.
+
+---
+
+## 7. Inter-VLAN Routing
+
+* Enables communication between different VLANs.
+* Requires a Layer 3 switch or router.
+* Router-on-a-Stick uses one physical interface with subinterfaces.
+
+---
+
+## 8. MPLS & VRF
+
+* MPLS (Multiprotocol Label Switching) forwards packets using labels instead of IP lookups.
+* Faster than traditional routing.
+* VRF (Virtual Routing and Forwarding) creates multiple independent routing tables.
+* Allows different customers to use overlapping IP addresses.
+
+---
+
+## 9. SDN (Software Defined Networking)
+
+* Separates Control Plane from Data Plane.
+* Centralized network management.
+* Makes network configuration easier and programmable.
+
+### OpenDaylight
+
+* Open-source SDN Controller.
+* Controls OpenFlow-enabled switches.
+
+### Mininet
+
+* Network emulator used to create virtual SDN networks.
+* Runs multiple virtual hosts and switches on one PC.
+
+### OFNet
+
+* SDN network emulator.
+* Simulates OpenFlow networks for testing.
+
+---
+
+## 10. OpenFlow using Mininet
+
+* OpenFlow is the communication protocol between SDN Controller and switches.
+* Mininet simulates OpenFlow networks.
+* Used to test SDN without physical hardware.
+
+---
+
+# Important Differences
+
+### IBGP vs EBGP
+
+* IBGP → Within the same AS.
+* EBGP → Between different ASes.
+
+### Local Preference vs MED
+
+* Local Preference → Outgoing path selection (Higher is better).
+* MED → Incoming path suggestion (Lower is better).
+
+### SSH vs Telnet
+
+* SSH → Encrypted and secure.
+* Telnet → Unencrypted and insecure.
+
+### Traditional Network vs SDN
+
+* Traditional → Control plane inside each router/switch.
+* SDN → Centralized controller manages the network.
+
+### MPLS vs Traditional Routing
+
+* MPLS → Uses labels, faster forwarding.
+* Traditional Routing → Uses IP lookup tables.
+
+### VLAN vs VRF
+
+* VLAN → Separates Layer 2 broadcast domains.
+* VRF → Separates Layer 3 routing tables.
+
+---
+
+# Quick One-Liners
+
+* **IP SLA:** Monitors network performance.
+* **Tracking:** Detects link status.
+* **BGP:** Exterior gateway routing protocol.
+* **AS:** Autonomous System.
+* **PBR:** Policy-Based Routing.
+* **RSPAN:** Remote traffic mirroring.
+* **VLAN:** Logical LAN segmentation.
+* **Inter-VLAN Routing:** Communication between VLANs.
+* **MPLS:** Label-based packet forwarding.
+* **VRF:** Multiple virtual routing tables.
+* **SDN:** Software-controlled networking.
+* **OpenFlow:** Protocol between controller and switches.
+* **Mininet:** SDN network emulator.
+* **OpenDaylight:** Open-source SDN controller.
