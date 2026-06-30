@@ -1,0 +1,413 @@
+✅ Practical 4(A) – Text Detection & Recognition
+✅ Practical 4(B) – Image Matting & Compositing
+
+
+# **Practical No. 4(A)**
+
+# **Aim**
+
+To detect and recognize text from an image using **OpenCV** and **Pytesseract OCR**.
+
+---
+
+# **Theory**
+
+Text Detection and Recognition (OCR - Optical Character Recognition) is the process of identifying text present in an image and converting it into editable digital text. In this practical, OpenCV preprocesses the image, while **Pytesseract** detects and recognizes the text. OCR is widely used in document scanning, passport verification, number plate recognition, and invoice processing.
+
+---
+
+# **Requirements (Install Once)**
+
+```bash
+pip install opencv-python
+pip install pytesseract
+```
+
+Install **Tesseract OCR** software.
+
+After installation, set its path in the code:
+
+```python
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+```
+
+---
+
+# **Algorithm**
+
+1. Open **Jupyter Notebook** or **Visual Studio Code**.
+2. Import the **OpenCV (`cv2`)** library for image processing and the **Pytesseract (`pytesseract`)** library for text recognition.
+3. Specify the path of the installed **Tesseract OCR** software.
+4. Load the image containing printed text using `cv2.imread()`.
+5. Convert the image into grayscale using `cv2.cvtColor()`.
+6. Apply thresholding using `cv2.threshold()` to improve text visibility.
+7. Detect and recognize the text using `pytesseract.image_to_data()`.
+8. Draw rectangles around the detected text and display the recognized words.
+9. Display the final output image.
+10. Close the output window after pressing any key.
+
+---
+
+# **Code**
+
+```python
+import cv2
+import pytesseract
+
+# ==========================================
+# STEP 1: Set Tesseract Path
+# Change only if Tesseract is installed elsewhere.
+# ==========================================
+
+pytesseract.pytesseract.tesseract_cmd = (
+    r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+)
+
+# ==========================================
+# STEP 2: Load Image
+# Put an image containing printed English text here.
+# Example: newspaper, book page, notice, invoice.
+# ==========================================
+
+image = cv2.imread(r"C:\Users\Admin\Downloads\image.png")
+
+if image is None:
+    print("Image not loaded.")
+    exit()
+
+# ==========================================
+# STEP 3: Convert Image to Grayscale
+# ==========================================
+
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# ==========================================
+# STEP 4: Apply Threshold
+# Makes text clearer for OCR.
+# ==========================================
+
+_, thresh = cv2.threshold(
+    gray,
+    150,
+    255,
+    cv2.THRESH_BINARY
+)
+
+# ==========================================
+# STEP 5: Detect Text
+# ==========================================
+
+data = pytesseract.image_to_data(
+    thresh,
+    output_type=pytesseract.Output.DICT
+)
+
+# ==========================================
+# STEP 6: Draw Boxes Around Text
+# ==========================================
+
+n_boxes = len(data["text"])
+
+for i in range(n_boxes):
+
+    if int(data["conf"][i]) > 60:
+
+        x = data["left"][i]
+        y = data["top"][i]
+        w = data["width"][i]
+        h = data["height"][i]
+
+        text = data["text"][i]
+
+        cv2.rectangle(
+            image,
+            (x, y),
+            (x + w, y + h),
+            (0, 255, 0),
+            2
+        )
+
+        cv2.putText(
+            image,
+            text,
+            (x, y - 10),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 0, 255),
+            2
+        )
+
+# ==========================================
+# STEP 7: Display Output
+# ==========================================
+
+cv2.imshow("Text Detection & Recognition", image)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+```
+
+---
+
+# **Viva Questions**
+
+### Q1. What is OCR?
+
+**Answer:** OCR (Optical Character Recognition) converts text present in an image into editable digital text.
+
+---
+
+### Q2. Which library performs OCR?
+
+**Answer:** Pytesseract.
+
+---
+
+### Q3. Why do we convert the image into grayscale?
+
+**Answer:** It reduces noise and improves text detection.
+
+---
+
+### Q4. Why is thresholding used?
+
+**Answer:** Thresholding increases the contrast between text and background, making OCR more accurate.
+
+---
+
+### Q5. Which function recognizes text?
+
+**Answer:** `pytesseract.image_to_data()`
+
+---
+
+### Q6. What does the confidence value indicate?
+
+**Answer:** It indicates how confident the OCR engine is about the detected text.
+
+---
+
+## 📌 Exam Tip
+
+Use a **clear image containing printed English text**, such as a book page, newspaper, notice, or printed document. Avoid handwritten text.
+
+---
+
+---
+
+# **Practical No. 4(B)**
+
+# **Aim**
+
+To perform **image matting and compositing** by removing the background from an image and replacing it with a new background.
+
+---
+
+# **Theory**
+
+Image matting is the process of separating the foreground object from its background. Image compositing combines the extracted foreground with a different background image. In this practical, the **rembg** library removes the background, while OpenCV blends the foreground with a new background using the alpha channel. This technique is commonly used in photo editing, filmmaking, advertising, and virtual backgrounds.
+
+---
+
+# **Requirements (Install Once)**
+
+```bash
+pip install rembg
+pip install onnxruntime
+pip install opencv-python
+```
+
+---
+
+# **Algorithm**
+
+1. Open **Jupyter Notebook** or **Visual Studio Code**.
+2. Import the **rembg** library to remove the image background.
+3. Import **OpenCV (`cv2`)** for image processing and **NumPy (`numpy`)** for numerical operations.
+4. Load the person's image from the specified location.
+5. Remove the background using the `remove()` function and save it as a PNG image with a transparent background.
+6. Load the transparent foreground image and the new background image.
+7. Resize the background image to match the foreground image size.
+8. Extract the alpha channel from the foreground image.
+9. Blend the foreground with the background using alpha blending.
+10. Save and display the final composited image.
+
+---
+
+# **Code**
+
+```python
+from rembg import remove
+import cv2
+import numpy as np
+
+# ==========================================
+# STEP 1: Load Person Image
+# Put a person's image here.
+# A simple/plain background gives better results.
+# ==========================================
+
+input_path = r"C:\Users\Admin\Downloads\man.jpeg"
+
+# Background removed image will be saved here.
+output_png = r"C:\Users\Admin\Downloads\person.png"
+
+# ==========================================
+# STEP 2: Remove Background
+# ==========================================
+
+with open(input_path, "rb") as i:
+    input_data = i.read()
+
+output_data = remove(input_data)
+
+with open(output_png, "wb") as o:
+    o.write(output_data)
+
+print("Background removed successfully.")
+
+# ==========================================
+# STEP 3: Load Images
+# ==========================================
+
+person = cv2.imread(output_png, cv2.IMREAD_UNCHANGED)
+
+# Put any background image here.
+# Example: Beach, Park, Office, Room, etc.
+background = cv2.imread(r"C:\Users\Admin\Downloads\Beach.jpeg")
+
+if person is None or background is None:
+    print("Error loading images.")
+    exit()
+
+# ==========================================
+# STEP 4: Check Alpha Channel
+# ==========================================
+
+if person.shape[2] != 4:
+    print("No alpha channel found.")
+    exit()
+
+# ==========================================
+# STEP 5: Resize Background
+# ==========================================
+
+background = cv2.resize(
+    background,
+    (person.shape[1], person.shape[0])
+)
+
+# ==========================================
+# STEP 6: Split Channels
+# ==========================================
+
+b, g, r, a = cv2.split(person)
+
+alpha = a / 255.0
+
+alpha = cv2.merge([alpha, alpha, alpha])
+
+person_rgb = cv2.merge([b, g, r])
+
+# ==========================================
+# STEP 7: Blend Images
+# ==========================================
+
+foreground = person_rgb * alpha
+
+background = background * (1 - alpha)
+
+final = cv2.add(
+    foreground,
+    background
+).astype("uint8")
+
+# ==========================================
+# STEP 8: Save Output
+# ==========================================
+
+output_path = r"C:\Users\Admin\Downloads\final_output.jpg"
+
+cv2.imwrite(output_path, final)
+
+print("Final image saved successfully.")
+
+# ==========================================
+# STEP 9: Display Output
+# ==========================================
+
+cv2.imshow("Final Output", final)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+```
+
+---
+
+# **Viva Questions**
+
+### Q1. What is image matting?
+
+**Answer:** Image matting is the process of separating the foreground object from its background.
+
+---
+
+### Q2. What is image compositing?
+
+**Answer:** Image compositing combines a foreground image with a new background image.
+
+---
+
+### Q3. Which library removes the background?
+
+**Answer:** `rembg`
+
+---
+
+### Q4. Why is PNG used?
+
+**Answer:** PNG supports a transparent background using an alpha channel.
+
+---
+
+### Q5. What is an alpha channel?
+
+**Answer:** The alpha channel stores transparency information for an image.
+
+---
+
+### Q6. Why do we resize the background image?
+
+**Answer:** To match the size of the foreground image before blending.
+
+---
+
+### Q7. What is alpha blending?
+
+**Answer:** Alpha blending combines the foreground and background images smoothly using transparency values.
+
+---
+
+## 📌 Exam Tip
+
+For best results:
+
+* Use a **clear image of a single person**.
+* Choose an image with a **plain background** for easier background removal.
+* Use any attractive background image (beach, park, office, etc.) for compositing.
+
+---
+
+## ⭐ Final Viva Questions (Very Common)
+
+1. **What is Computer Vision?**
+   **Answer:** Computer Vision is a field of Artificial Intelligence that enables computers to understand, analyze, and interpret images and videos.
+
+2. **What is OpenCV?**
+   **Answer:** OpenCV (Open Source Computer Vision Library) is an open-source library used for image processing and computer vision tasks.
+
+3. **Why do we convert images to grayscale in many practicals?**
+   **Answer:** Grayscale reduces image complexity and speeds up processing while improving the accuracy of detection algorithms.
+
+These are among the most commonly asked viva questions across the entire Computer Vision practical journal.
+
