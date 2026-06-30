@@ -1,0 +1,330 @@
+a. To perform **feature extraction and matching using the RANSAC algorithm** in OpenCV.
+b. To perform **image colorization** using OpenCV by applying a color map to a grayscale image.
+
+# **Practical No. 3(A)**
+
+# **Aim**
+
+To perform **feature extraction and matching using the RANSAC algorithm** in OpenCV.
+
+---
+
+# **Theory**
+
+Feature extraction is the process of identifying important points (keypoints) in an image. These features are matched with another image to find common regions. The **RANSAC (Random Sample Consensus)** algorithm removes incorrect matches (outliers) and calculates a reliable transformation between the two images. This technique is widely used in panorama creation, image registration, object recognition, and computer vision applications.
+
+---
+
+# **Algorithm**
+
+1. Open **Jupyter Notebook** or **Visual Studio Code**.
+2. Import the **OpenCV (`cv2`)** library for image processing and the **NumPy (`numpy`)** library for numerical calculations.
+3. Load two images of the **same object or scene** using `cv2.imread()`.
+4. Convert both images into grayscale while loading them for faster feature detection.
+5. Detect keypoints and descriptors using the **ORB (Oriented FAST and Rotated BRIEF)** feature detector.
+6. Match the detected features using the **Brute Force Matcher (BFMatcher)**.
+7. Sort the matched features based on distance so that the best matches are selected first.
+8. Apply the **RANSAC algorithm** using `cv2.findHomography()` to remove incorrect matches.
+9. Draw only the valid feature matches between both images.
+10. Display the final matched image and close the output window after pressing any key.
+
+---
+
+# **Code**
+
+```python
+import cv2
+import numpy as np
+
+# ==========================================
+# STEP 1: Load Images
+# Put the FIRST image here.
+# Example: image1.jpeg
+# ==========================================
+
+img1 = cv2.imread(
+    r"D:\USER DATA\Downloads\image1.jpeg",
+    cv2.IMREAD_GRAYSCALE
+)
+
+# Put the SECOND image of the SAME object/scene here.
+# Example: image2.jpeg
+img2 = cv2.imread(
+    r"D:\USER DATA\Downloads\image2.jpeg",
+    cv2.IMREAD_GRAYSCALE
+)
+
+# Check whether images are loaded successfully
+if img1 is None or img2 is None:
+    print("Error: Image not loaded.")
+    exit()
+
+# ==========================================
+# STEP 2: Detect ORB Features
+# ==========================================
+
+orb = cv2.ORB_create()
+
+kp1, des1 = orb.detectAndCompute(img1, None)
+kp2, des2 = orb.detectAndCompute(img2, None)
+
+# ==========================================
+# STEP 3: Match Features
+# ==========================================
+
+bf = cv2.BFMatcher(
+    cv2.NORM_HAMMING,
+    crossCheck=True
+)
+
+matches = bf.match(des1, des2)
+
+# Sort matches according to distance
+matches = sorted(matches, key=lambda x: x.distance)
+
+# ==========================================
+# STEP 4: Apply RANSAC
+# Remove incorrect feature matches
+# ==========================================
+
+src_pts = np.float32(
+    [kp1[m.queryIdx].pt for m in matches]
+).reshape(-1, 1, 2)
+
+dst_pts = np.float32(
+    [kp2[m.trainIdx].pt for m in matches]
+).reshape(-1, 1, 2)
+
+H, mask = cv2.findHomography(
+    src_pts,
+    dst_pts,
+    cv2.RANSAC,
+    5.0
+)
+
+matchesMask = mask.ravel().tolist()
+
+# ==========================================
+# STEP 5: Draw Valid Matches
+# ==========================================
+
+draw_params = dict(
+    matchColor=(0, 255, 0),
+    singlePointColor=None,
+    matchesMask=matchesMask,
+    flags=2
+)
+
+result = cv2.drawMatches(
+    img1,
+    kp1,
+    img2,
+    kp2,
+    matches,
+    None,
+    **draw_params
+)
+
+# ==========================================
+# STEP 6: Display Output
+# ==========================================
+
+cv2.imshow("RANSAC Feature Matching", result)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+```
+
+---
+
+# **Viva Questions**
+
+### Q1. What is feature extraction?
+
+**Answer:** Feature extraction is the process of detecting important points or patterns in an image.
+
+---
+
+### Q2. What is ORB?
+
+**Answer:** ORB (Oriented FAST and Rotated BRIEF) is a feature detection and description algorithm.
+
+---
+
+### Q3. What is BFMatcher?
+
+**Answer:** BFMatcher compares descriptors from two images to find matching features.
+
+---
+
+### Q4. What is RANSAC?
+
+**Answer:** RANSAC (Random Sample Consensus) removes incorrect feature matches and calculates a reliable transformation.
+
+---
+
+### Q5. Why do we use grayscale images?
+
+**Answer:** Grayscale images reduce computation and improve feature detection speed.
+
+---
+
+### Q6. Which OpenCV function implements RANSAC?
+
+**Answer:** `cv2.findHomography()`
+
+---
+
+## 📌 Exam Tip
+
+For this practical, use **two images of the same object or place** (such as a building, book cover, or logo) taken from slightly different angles.
+
+---
+
+# **Practical No. 3(B)**
+
+# **Aim**
+
+To perform **image colorization** using OpenCV by applying a color map to a grayscale image.
+
+---
+
+# **Theory**
+
+Image colorization is the process of converting a grayscale image into a colored image. In this practical, OpenCV applies a predefined color map to assign different colors to different intensity values. Colorization improves visualization and is commonly used in medical imaging, thermal imaging, satellite images, and image enhancement.
+
+---
+
+# **Algorithm**
+
+1. Open **Jupyter Notebook** or **Visual Studio Code**.
+2. Import the **OpenCV (`cv2`)** library for image processing and the **os** library to check whether the image file exists.
+3. Specify the path of the grayscale image.
+4. Check whether the image file exists using the **os** library.
+5. Load the grayscale image using `cv2.imread()`.
+6. Apply a color map using `cv2.applyColorMap()`.
+7. Display both the original grayscale image and the colorized image.
+8. Save the colorized image to the specified location.
+9. Close all display windows after pressing any key.
+
+---
+
+# **Code**
+
+```python
+import cv2
+import os
+
+# ==========================================
+# STEP 1: Load Image
+# Put a grayscale (black & white) image here.
+# ==========================================
+
+image_path = r"C:\Users\Admin\Pictures\image1.png"
+
+# ==========================================
+# STEP 2: Check if image exists
+# ==========================================
+
+if not os.path.exists(image_path):
+    print("Error: Image file not found.")
+    exit()
+
+# ==========================================
+# STEP 3: Read Grayscale Image
+# ==========================================
+
+gray_image = cv2.imread(
+    image_path,
+    cv2.IMREAD_GRAYSCALE
+)
+
+if gray_image is None:
+    print("Unable to load image.")
+    exit()
+
+# ==========================================
+# STEP 4: Apply Color Map
+# Converts grayscale image into a colored image.
+# ==========================================
+
+colorized_image = cv2.applyColorMap(
+    gray_image,
+    cv2.COLORMAP_JET
+)
+
+# ==========================================
+# STEP 5: Display Images
+# ==========================================
+
+cv2.imshow("Original Grayscale Image", gray_image)
+cv2.imshow("Colorized Image", colorized_image)
+
+# ==========================================
+# STEP 6: Save Output Image
+# ==========================================
+
+output_path = r"C:\Users\Admin\Pictures\colorized_output.jpg"
+
+cv2.imwrite(output_path, colorized_image)
+
+print("Colorized image saved successfully.")
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+```
+
+---
+
+# **Viva Questions**
+
+### Q1. What is image colorization?
+
+**Answer:** Image colorization is the process of adding colors to a grayscale image.
+
+---
+
+### Q2. Which function is used for colorization?
+
+**Answer:** `cv2.applyColorMap()`
+
+---
+
+### Q3. What is `COLORMAP_JET`?
+
+**Answer:** It is a predefined OpenCV color map that converts grayscale intensity values into different colors.
+
+---
+
+### Q4. Why is the `os` library imported?
+
+**Answer:** It checks whether the image file exists before loading it.
+
+---
+
+### Q5. Can this method restore the original colors of an image?
+
+**Answer:** No. It applies artificial colors based on pixel intensity and does not recover the original colors.
+
+---
+
+### Q6. Why do we save the output image?
+
+**Answer:** To store the generated colorized image for future use or analysis.
+
+---
+
+## 📌 Exam Tip
+
+For this practical, use **any black-and-white (grayscale) image**. If your image is already in color, the effect of the color map may not be as expected. A grayscale image produces the best results.
+
+---
+
+## ⭐ Frequently Asked Viva Question
+
+**Q. What is the difference between Feature Extraction and Colorization?**
+
+**Answer:**
+
+* **Feature Extraction** identifies important keypoints and matches them between images for recognition or alignment.
+* **Colorization** adds artificial colors to a grayscale image to improve visualization.
