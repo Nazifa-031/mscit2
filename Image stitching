@@ -1,0 +1,179 @@
+
+
+# Practical No. 1(B)
+
+## Aim
+
+To stitch two overlapping images together and create a single panoramic image using OpenCV.
+
+---
+
+## Theory
+
+Image stitching is the process of combining two or more overlapping images into one larger image called a panorama. It detects common features in both images, matches them, calculates the transformation between them, and joins the images seamlessly. Image stitching is commonly used in panoramic photography, satellite imaging, medical imaging, and virtual reality.
+
+---
+
+## Algorithm
+
+1. Open **Jupyter Notebook** or **Visual Studio Code**.
+2. Import the **OpenCV (`cv2`)** library for image processing and the **NumPy (`numpy`)** library for numerical calculations.
+3. Load two overlapping images from the specified file paths using `cv2.imread()`.
+4. Convert both images into grayscale using `cv2.cvtColor()` to simplify feature detection.
+5. Detect keypoints and descriptors in both images using the **ORB (Oriented FAST and Rotated BRIEF)** feature detector.
+6. Match the features using **Brute Force Matcher (BFMatcher)** and sort them based on matching distance.
+7. Compute the homography matrix using **RANSAC** to align both images correctly.
+8. Warp one image using `cv2.warpPerspective()` and place the second image over it.
+9. Remove unwanted black borders by cropping the final stitched image.
+10. Display and save the panoramic image.
+
+---
+
+## Code
+
+```python
+import cv2
+import numpy as np
+
+# ==========================================
+# STEP 1: Load Images
+# Put the FIRST overlapping image here.
+# Example: tree1.jpeg
+# ==========================================
+img1 = cv2.imread(r"D:\USER DATA\Downloads\tree.jpeg")
+
+# Put the SECOND overlapping image here.
+# It should overlap with the first image.
+# Example: tree2.jpeg
+img2 = cv2.imread(r"D:\USER DATA\Downloads\tree.jpeg")
+
+# Check whether both images are loaded
+if img1 is None or img2 is None:
+    print("Error: Image not loaded. Check the file path.")
+    exit()
+
+# ==========================================
+# STEP 2: Convert images to Grayscale
+# ==========================================
+
+gray1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+
+# ==========================================
+# STEP 3: Detect ORB Features
+# ==========================================
+
+orb = cv2.ORB_create(2000)
+
+kp1, des1 = orb.detectAndCompute(gray1, None)
+kp2, des2 = orb.detectAndCompute(gray2, None)
+
+# ==========================================
+# STEP 4: Match Features
+# ==========================================
+
+bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+matches = bf.match(des1, des2)
+
+# Sort matches by distance
+matches = sorted(matches, key=lambda x: x.distance)
+
+# ==========================================
+# STEP 5: Find Homography using RANSAC
+# ==========================================
+
+pts1 = np.float32([kp1[m.queryIdx].pt for m in matches])
+pts2 = np.float32([kp2[m.trainIdx].pt for m in matches])
+
+H, _ = cv2.findHomography(pts2, pts1, cv2.RANSAC)
+
+# ==========================================
+# STEP 6: Stitch Images
+# ==========================================
+
+h, w = img1.shape[:2]
+
+result = cv2.warpPerspective(img2, H, (w * 2, h))
+
+overlay = result.copy()
+overlay[0:h, 0:w] = img1
+
+result = cv2.addWeighted(overlay, 0.5, result, 0.5, 0)
+
+# ==========================================
+# STEP 7: Crop Black Borders
+# ==========================================
+
+gray = cv2.cvtColor(result, cv2.COLOR_BGR2GRAY)
+
+_, thresh = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY)
+
+coords = cv2.findNonZero(thresh)
+
+x, y, w, h = cv2.boundingRect(coords)
+
+result = result[y:y+h, x:x+w]
+
+# ==========================================
+# STEP 8: Save and Display Result
+# ==========================================
+
+cv2.imwrite("final_clean.jpg", result)
+
+cv2.imshow("Final Panorama", result)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+```
+
+---
+
+# Viva Questions
+
+### Q1. What is image stitching?
+
+**Answer:** Image stitching is the process of combining two or more overlapping images into one larger panoramic image.
+
+---
+
+### Q2. What is ORB?
+
+**Answer:** ORB (Oriented FAST and Rotated BRIEF) is a feature detection and description algorithm used to find keypoints in images.
+
+---
+
+### Q3. Why do we convert images to grayscale?
+
+**Answer:** Grayscale images reduce computation and make feature detection faster and more accurate.
+
+---
+
+### Q4. What is BFMatcher?
+
+**Answer:** BFMatcher (Brute Force Matcher) compares descriptors from two images to find matching features.
+
+---
+
+### Q5. What is Homography?
+
+**Answer:** Homography is a transformation matrix used to align one image with another.
+
+---
+
+### Q6. Why is RANSAC used?
+
+**Answer:** RANSAC removes incorrect feature matches (outliers) and calculates a more accurate homography matrix.
+
+---
+
+### Q7. What is a panorama?
+
+**Answer:** A panorama is a wide image created by stitching multiple overlapping images together.
+
+---
+
+## 📌 Exam Tip
+
+For this practical, use **two photos of the same scene with some overlapping area** (around 30–50% overlap). For example, take two pictures of the same building or tree from slightly different positions. This gives ORB enough common features to stitch the images successfully.
+
+**Next:** Practical **1(C): Camera Calibration**. I'll simplify that one as well, explain what a chessboard image is, and keep the code clean and exam-friendly.
