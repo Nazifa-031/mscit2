@@ -1,0 +1,177 @@
+# Practical No. 1(C)
+
+## Aim
+
+To detect the corners of a chessboard pattern for camera calibration using OpenCV.
+
+---
+
+## Theory
+
+Camera calibration is the process of finding the internal properties (camera parameters) of a camera so that images can be measured accurately. A **chessboard pattern** is commonly used because its corners are easy to detect. In this practical, OpenCV detects the inner corners of the chessboard and marks them on the image. This is the first step in camera calibration.
+
+---
+
+## Algorithm
+
+1. Open **Jupyter Notebook** or **Visual Studio Code**.
+2. Import the **OpenCV (`cv2`)** library for image processing and the **NumPy (`numpy`)** library for numerical operations.
+3. Specify the number of **inner corners** of the chessboard pattern (7 columns × 6 rows).
+4. Load the chessboard image from the given file path using `cv2.imread()`.
+5. Check whether the image is loaded successfully. If not, verify the image path.
+6. Convert the image into grayscale using `cv2.cvtColor()` because corner detection works better on grayscale images.
+7. Detect the chessboard corners using `cv2.findChessboardCorners()`.
+8. Refine the detected corner positions using `cv2.cornerSubPix()` for better accuracy.
+9. Draw the detected corners on the original image using `cv2.drawChessboardCorners()`.
+10. Display the output image showing the detected corners and close the window after pressing any key.
+
+---
+
+## Code
+
+```python
+import cv2
+import numpy as np
+
+# ==========================================
+# STEP 1: Specify Chessboard Size
+# Number of INNER corners (Columns, Rows)
+# ==========================================
+
+CHECKERBOARD = (7, 6)
+
+# ==========================================
+# STEP 2: Load Chessboard Image
+# Put a clear chessboard calibration image here.
+# The image should show the complete chessboard.
+# ==========================================
+
+img = cv2.imread(r"D:\USER DATA\Downloads\chessboard.jpeg")
+
+# Check if image is loaded
+if img is None:
+    print("Error: Image not loaded. Check the file path.")
+    exit()
+
+# ==========================================
+# STEP 3: Convert Image to Grayscale
+# ==========================================
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+# ==========================================
+# STEP 4: Detect Chessboard Corners
+# ==========================================
+
+ret, corners = cv2.findChessboardCorners(gray, CHECKERBOARD, None)
+
+# ==========================================
+# STEP 5: If corners are detected,
+# improve their accuracy and draw them.
+# ==========================================
+
+if ret:
+
+    criteria = (
+        cv2.TERM_CRITERIA_EPS +
+        cv2.TERM_CRITERIA_MAX_ITER,
+        30,
+        0.001
+    )
+
+    corners2 = cv2.cornerSubPix(
+        gray,
+        corners,
+        (11, 11),
+        (-1, -1),
+        criteria
+    )
+
+    cv2.drawChessboardCorners(
+        img,
+        CHECKERBOARD,
+        corners2,
+        ret
+    )
+
+    cv2.imshow("Detected Chessboard Corners", img)
+
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+else:
+    print("Chessboard corners not detected.")
+```
+
+---
+
+# Viva Questions
+
+### Q1. What is camera calibration?
+
+**Answer:** Camera calibration is the process of determining the camera's internal parameters so that measurements from images are accurate.
+
+---
+
+### Q2. Why is a chessboard used?
+
+**Answer:** A chessboard has regular black and white squares with easily detectable corners, making it ideal for calibration.
+
+---
+
+### Q3. What does `(7, 6)` represent?
+
+**Answer:** It represents **7 inner corners horizontally** and **6 inner corners vertically** on the chessboard.
+
+> **Note:** These are **inner corners**, **not** the number of squares.
+
+---
+
+### Q4. Why is the image converted to grayscale?
+
+**Answer:** Grayscale images simplify processing and improve corner detection accuracy.
+
+---
+
+### Q5. Which function detects the chessboard corners?
+
+**Answer:** `cv2.findChessboardCorners()`
+
+---
+
+### Q6. Why is `cornerSubPix()` used?
+
+**Answer:** It improves the accuracy of the detected corner positions by refining them to sub-pixel precision.
+
+---
+
+### Q7. Which function draws the detected corners?
+
+**Answer:** `cv2.drawChessboardCorners()`
+
+---
+
+## 📌 Exam Tip
+
+### What image should you use?
+
+Download a **camera calibration chessboard image** (black and white checkerboard) like the one below. Make sure the **entire chessboard is visible** and not blurred.
+
+**Keep this line as it is and only replace the file if needed:**
+
+```python
+img = cv2.imread(r"D:\USER DATA\Downloads\chessboard.jpeg")
+# Put a clear chessboard calibration image here.
+```
+
+### 🔹 Easy way to remember this practical
+
+Think of it as a 5-step process:
+
+1. **Load** the chessboard image.
+2. **Convert** it to grayscale.
+3. **Detect** the chessboard corners.
+4. **Refine** the corner positions.
+5. **Display** the image with marked corners.
+
+This practical is one of the easiest in the journal once you know that you're simply **finding and marking the chessboard corners**, not performing the full camera calibration.
