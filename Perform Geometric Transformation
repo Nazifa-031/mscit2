@@ -1,0 +1,136 @@
+ **Practical 1(A): Perform Geometric Transformation**.
+
+---
+
+# Practical No. 1(A)
+
+## Aim
+
+To perform geometric transformations such as translation, rotation, and scaling on an image using OpenCV.
+
+---
+
+## Theory
+
+Geometric transformation is a process of changing the position, orientation, or size of an image without altering its content. The most common transformations are translation (shifting), rotation (turning), and scaling (resizing). These transformations are widely used in computer vision, image editing, robotics, and object detection.
+
+---
+
+## Algorithm
+
+1. Open **Jupyter Notebook** or **Visual Studio Code**.
+2. Import the **OpenCV (`cv2`)** library for image processing and the **NumPy (`numpy`)** library for creating transformation matrices.
+3. Load the input image from the specified file path using `cv2.imread()`.
+4. Check whether the image is loaded successfully. If the image is not found, verify the file path and image name.
+5. Obtain the image dimensions (rows and columns) using `img.shape`.
+6. Create a **translation matrix** using NumPy and apply translation using `cv2.warpAffine()`.
+7. Create a **rotation matrix** using `cv2.getRotationMatrix2D()` and rotate the image.
+8. Resize the image using `cv2.resize()` to perform scaling.
+9. Display the original image along with the translated, rotated, and scaled images using `cv2.imshow()`.
+10. Press any key to close all display windows.
+
+---
+
+## Code
+
+```python
+import cv2
+import numpy as np
+
+# ==========================================
+# STEP 1: Load the image
+# Put any normal image here.
+# Example: Earth.jpeg, Nature.jpg, Building.png
+# ==========================================
+
+img = cv2.imread(r"C:\Users\Admin\Downloads\Earth.jpeg")
+
+# Check if image is loaded successfully
+if img is None:
+    print("Image not loaded. Check the file path.")
+    exit()
+
+# Get image dimensions
+rows, cols = img.shape[:2]
+
+# ==========================================
+# STEP 2: Translation
+# Moves the image horizontally and vertically.
+# ==========================================
+
+T = np.float32([
+    [1, 0, 100],
+    [0, 1, 50]
+])
+
+translated = cv2.warpAffine(img, T, (cols, rows))
+
+# ==========================================
+# STEP 3: Rotation
+# Rotates the image by 45 degrees.
+# ==========================================
+
+R = cv2.getRotationMatrix2D((cols / 2, rows / 2), 45, 1)
+
+rotated = cv2.warpAffine(img, R, (cols, rows))
+
+# ==========================================
+# STEP 4: Scaling
+# Resizes the image to half its original size.
+# ==========================================
+
+scaled = cv2.resize(img, None, fx=0.5, fy=0.5)
+
+# ==========================================
+# STEP 5: Display all images
+# ==========================================
+
+cv2.imshow("Original Image", img)
+cv2.imshow("Translated Image", translated)
+cv2.imshow("Rotated Image", rotated)
+cv2.imshow("Scaled Image", scaled)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+```
+
+---
+
+### 💡 Viva Questions (Very Important)
+
+**Q1. What is a geometric transformation?**
+**Ans:** It is the process of changing the position, orientation, or size of an image.
+
+**Q2. What is translation?**
+**Ans:** Translation shifts an image horizontally or vertically.
+
+**Q3. Which function is used for rotation?**
+**Ans:** `cv2.getRotationMatrix2D()`
+
+**Q4. Which function applies translation?**
+**Ans:** `cv2.warpAffine()`
+
+**Q5. Which function is used for scaling?**
+**Ans:** `cv2.resize()`
+
+**Q6. Why is NumPy imported?**
+**Ans:** NumPy is used to create the translation matrix required for image transformation.
+
+**Q7. Why do we use `img.shape`?**
+**Ans:** It returns the height and width of the image, which are needed for transformations.
+
+---
+
+### 📌 Exam Tip
+
+For this practical, simply download **any normal image** (nature, Earth, building, car, etc.), update the path in:
+
+```python
+img = cv2.imread(r"C:\Users\Admin\Downloads\Earth.jpeg")
+```
+
+and run the code. No other changes are needed.
+
+---
+
+I also suggest one improvement for the rest of the journal: after each practical, I'll add **5–7 viva questions with answers**. Mumbai University practical exams often include viva, and these questions will help you prepare without having to study separately.
