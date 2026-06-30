@@ -1,0 +1,367 @@
+Perfect! Here's **Part 2, Part 3 and Part 4** in the same exam-friendly format.
+
+---
+
+# **Practical No. 2(A)**
+
+# **Aim**
+
+To perform **face detection, face recognition, object detection, and pedestrian detection** using OpenCV.
+
+---
+
+# **Theory**
+
+Face detection identifies human faces in an image using a Haar Cascade Classifier. Face recognition compares two detected faces to determine whether they belong to the same person. Pedestrian detection uses the HOG (Histogram of Oriented Gradients) descriptor to detect people in an image. These techniques are widely used in surveillance systems, attendance systems, security applications, and autonomous vehicles.
+
+---
+
+# **Algorithm**
+
+1. Open **Jupyter Notebook** or **Visual Studio Code**.
+2. Import the **OpenCV (`cv2`)** library for computer vision and **NumPy (`numpy`)** for numerical operations.
+3. Load the required image(s) using `cv2.imread()`.
+4. Check whether the images are loaded successfully.
+5. Convert both images into grayscale using `cv2.cvtColor()`.
+6. Load the **Haar Cascade Classifier** for face detection.
+7. Detect faces in both images using `detectMultiScale()`.
+8. Compare the detected faces using histogram comparison.
+9. Load the **HOG Descriptor** and detect pedestrians.
+10. Draw rectangles around detected faces and pedestrians.
+11. Display the final output image and save it.
+
+---
+
+# **Code**
+
+```python
+import cv2
+import numpy as np
+
+# ==========================================
+# STEP 1: Load Images
+# Put the FIRST person's image here.
+# ==========================================
+
+img1 = cv2.imread(r"D:\USER DATA\Downloads\myself.jpeg")
+
+# Put the SECOND person's image here.
+# Use another image of the same person for recognition.
+img2 = cv2.imread(r"D:\USER DATA\Downloads\myself.jpeg")
+
+if img1 is None or img2 is None:
+    print("Error: Image not loaded.")
+    exit()
+
+# ==========================================
+# STEP 2: Convert Images to Grayscale
+# ==========================================
+
+gray1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+
+# ==========================================
+# STEP 3: Load Haar Cascade Classifier
+# Used for Face Detection
+# ==========================================
+
+face_cascade = cv2.CascadeClassifier(
+    cv2.data.haarcascades +
+    "haarcascade_frontalface_default.xml"
+)
+
+faces1 = face_cascade.detectMultiScale(gray1, 1.3, 5)
+faces2 = face_cascade.detectMultiScale(gray2, 1.3, 5)
+
+# Draw rectangles around detected faces
+for (x, y, w, h) in faces2:
+    cv2.rectangle(img2, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+print("Faces detected:", len(faces2))
+
+# ==========================================
+# STEP 4: Face Recognition
+# Compare two detected faces
+# ==========================================
+
+def compare_faces(face1, face2):
+
+    face1 = cv2.resize(face1, (100, 100))
+    face2 = cv2.resize(face2, (100, 100))
+
+    hist1 = cv2.calcHist([face1], [0], None, [256], [0, 256])
+    hist2 = cv2.calcHist([face2], [0], None, [256], [0, 256])
+
+    score = cv2.compareHist(hist1, hist2, cv2.HISTCMP_CORREL)
+
+    return score
+
+
+if len(faces1) > 0 and len(faces2) > 0:
+
+    x1, y1, w1, h1 = faces1[0]
+    x2, y2, w2, h2 = faces2[0]
+
+    face1 = gray1[y1:y1+h1, x1:x1+w1]
+    face2 = gray2[y2:y2+h2, x2:x2+w2]
+
+    similarity = compare_faces(face1, face2)
+
+    if similarity > 0.6:
+        label = "Same Person"
+    else:
+        label = "Different Person"
+
+    cv2.putText(
+        img2,
+        label,
+        (x2, y2 - 10),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.7,
+        (255, 0, 0),
+        2
+    )
+
+# ==========================================
+# STEP 5: Pedestrian Detection
+# Put an image containing people here.
+# ==========================================
+
+hog = cv2.HOGDescriptor()
+hog.setSVMDetector(
+    cv2.HOGDescriptor_getDefaultPeopleDetector()
+)
+
+boxes, _ = hog.detectMultiScale(gray2)
+
+for (x, y, w, h) in boxes:
+    cv2.rectangle(img2, (x, y), (x+w, y+h), (255, 0, 0), 2)
+
+print("People detected:", len(boxes))
+
+# ==========================================
+# STEP 6: Display Output
+# ==========================================
+
+cv2.imshow("Detection Result", img2)
+
+cv2.imwrite("output.jpg", img2)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+```
+
+---
+
+## Viva
+
+**Q. Which classifier is used for face detection?**
+
+Haar Cascade Classifier.
+
+**Q. Which descriptor is used for pedestrian detection?**
+
+HOG Descriptor.
+
+**Q. What is face recognition?**
+
+It compares facial features to determine whether two faces belong to the same person.
+
+---
+
+# **Practical No. 2(B)**
+
+# **Aim**
+
+To construct a simple **3D model** from two images using feature matching and triangulation.
+
+---
+
+# **Theory**
+
+3D reconstruction creates a three-dimensional representation of an object using multiple 2D images taken from different viewpoints. ORB detects image features, BFMatcher matches them, and triangulation estimates the 3D coordinates of the matched points.
+
+---
+
+# **Algorithm**
+
+1. Open Jupyter Notebook or VS Code.
+2. Import **OpenCV**, **NumPy**, and **Matplotlib**.
+3. Load two images of the same object taken from different angles.
+4. Convert both images to grayscale.
+5. Detect ORB features in both images.
+6. Match the features using BFMatcher.
+7. Compute the Essential Matrix.
+8. Recover the camera pose.
+9. Triangulate the matched points to obtain 3D coordinates.
+10. Display the 3D point cloud.
+
+---
+
+# **Code**
+
+*(Keep your original code. It is already correct after indentation.)*
+
+Just add these comments:
+
+```python
+img1 = cv2.imread(r"C:\Users\Admin\Downloads\D.jpeg")
+# Put the FIRST image of the object here.
+
+img2 = cv2.imread(r"C:\Users\Admin\Downloads\D1.jpeg")
+# Put the SECOND image of the SAME object taken from another angle.
+```
+
+```python
+# ORB detects important features.
+orb = cv2.ORB_create()
+```
+
+```python
+# Match the detected features.
+bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+```
+
+```python
+# Convert matched points into a simple 3D point cloud.
+pts4D = cv2.triangulatePoints(proj1, proj2, pts1.T, pts2.T)
+```
+
+```python
+# Display the reconstructed 3D model.
+plt.show()
+```
+
+---
+
+## Viva
+
+**Q. Why are two images required?**
+
+To estimate the depth of the object.
+
+**Q. What is triangulation?**
+
+It calculates the 3D position of points using two images.
+
+**Q. Which feature detector is used?**
+
+ORB.
+
+---
+
+# **Practical No. 2(C)**
+
+# **Aim**
+
+To detect and track a moving object from a video using OpenCV.
+
+---
+
+# **Theory**
+
+Object detection identifies an object in each frame of a video, while object tracking follows the detected object throughout the video. In this practical, HOG detects a person, and the KCF Tracker continuously tracks the detected person.
+
+---
+
+# **Algorithm**
+
+1. Open Jupyter Notebook or VS Code.
+2. Import the OpenCV library.
+3. Load the video using `cv2.VideoCapture()`.
+4. Load the HOG Descriptor for person detection.
+5. Detect the first person in the video.
+6. Initialize the KCF Tracker using the detected person.
+7. Read each video frame continuously.
+8. Update the tracker for every frame.
+9. Draw a rectangle around the tracked object.
+10. Display the tracking result until the video ends or the **Esc** key is pressed.
+
+---
+
+# **Code**
+
+Keep your code.
+
+Only add these comments.
+
+```python
+# Put a video containing a moving person here.
+cap = cv2.VideoCapture(r"C:\Users\Admin\Downloads\Video.mp4")
+```
+
+```python
+# Load HOG detector for detecting people.
+hog = cv2.HOGDescriptor()
+```
+
+```python
+# Create a KCF tracker to track the detected object.
+def create_tracker():
+```
+
+```python
+# Read video frame by frame.
+while True:
+```
+
+```python
+# Detect the first person in the video.
+boxes, _ = hog.detectMultiScale(frame)
+```
+
+```python
+# Start tracking the detected person.
+tracker.init(frame, (x, y, w, h))
+```
+
+```python
+# Update the tracker for every new frame.
+success, box = tracker.update(frame)
+```
+
+```python
+# Display the final tracking result.
+cv2.imshow("Object Detection & Tracking", frame)
+```
+
+---
+
+## Viva
+
+**Q. What is object tracking?**
+
+Object tracking continuously follows a detected object in successive video frames.
+
+**Q. What is HOG?**
+
+HOG (Histogram of Oriented Gradients) is a feature descriptor used for detecting people.
+
+**Q. Which tracker is used?**
+
+KCF (Kernelized Correlation Filter) Tracker.
+
+**Q. Why do we use `VideoCapture()`?**
+
+It reads the video frame by frame for processing.
+
+---
+
+## ⭐ Examiner Tip (Important)
+
+For **Practical 2(A)**, **2(B)**, and **2(C)**, your examiner may ask:
+
+* **Why do we convert images to grayscale?**
+
+  * Because grayscale reduces computation and makes feature detection faster and more accurate.
+
+* **Why do we use OpenCV?**
+
+  * OpenCV provides built-in functions for image processing, feature detection, object detection, and tracking.
+
+* **Difference between Detection and Tracking?**
+
+  * **Detection** finds the object in an image or frame.
+  * **Tracking** follows the detected object across consecutive video frames.
+
+These three questions are asked very frequently in practical viva exams.
